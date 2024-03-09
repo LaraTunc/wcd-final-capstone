@@ -54,6 +54,37 @@ $ kubectl apply -f service.yaml
 Get your load balancer external ip with `kubectl get svc my-app-service -o wide`.
 See `Success! Welcome To My App!` on the screen.
 
+## How to start observability sytems
+
+Create an RBAC role and role bindings to grant Fluentd access to the necessary Kubernetes resources, such as pods, namespaces, and service accounts
+
+```sh
+$ kubectl apply -f fluentd-rbac.yaml
+```
+
+Create a Kubernetes service account for Fluentd and bind it to the appropriate RBAC role.
+
+```sh
+$ kubectl apply -f fluentd-serviceaccount.yaml
+```
+
+Apply the config maps for fluentd, prometheus and grafana to the cluster.
+Fluentd is configured to forward and log everything.
+
+```sh
+$ kubectl create configmap fluentd-config --from-file=fluentd.conf
+$ kubectl create configmap prometheus-config --from-file=prometheus-conf.yml
+$ kubectl create configmap grafana-config --from-file=grafana.ini
+```
+
+Apply the fluentd daemonset, prometheus and grafana service and deployments to the cluster.
+
+```sh
+$ kubectl apply -f fluentd.yaml
+$ kubectl apply -f prometheus-deploy.yaml
+$ kubectl apply -f grafana.yaml
+```
+
 ## How to destroy provisioned resources
 
 ```sh
@@ -62,7 +93,7 @@ $ terraform destroy --auto-approve
 
 ## URL to public GitHub repo
 
-https://github.com/LaraTunc/wcd-7-kubernetes
+https://github.com/LaraTunc/wcd-8-observability
 
 ## Dockerhub Image
 
@@ -70,7 +101,11 @@ https://hub.docker.com/repository/docker/laratunc/simple_flask_app/general
 
 ## Docs
 
-- [Building multi platform images](https://docs.docker.com/build/building/multi-platform/)
-- [Terraform aws eks github examples](https://github.com/terraform-aws-modules/terraform-aws-eks/tree/master/examples)
-- [Terraform eks module](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest)
-- `docker buildx build --platform linux/amd64,linux/arm64 -t <username>/<image> --push .`
+- https://docs.fluentd.org/
+- https://github.com/fluent/fluentd/tree/master
+- https://prometheus.io/docs/introduction/overview/
+- https://grafana.com/docs/grafana/latest/
+- https://grafana.com/docs/grafana/latest/setup-grafana/installation/kubernetes/
+- https://grafana.com/grafana/dashboards/
+- https://docs.fluentd.org/monitoring-fluentd/monitoring-prometheus
+- https://grafana.com/docs/grafana/latest/datasources/prometheus/
