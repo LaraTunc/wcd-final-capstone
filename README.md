@@ -85,6 +85,10 @@ $ kubectl apply -f prometheus-deploy.yaml
 $ kubectl apply -f grafana.yaml
 ```
 
+Visit the external cluster ip with the port 3000 to see the grafana dashboard.
+
+`http://<external-ip-of-the-cluster>:3000`
+
 ## How to destroy provisioned resources
 
 ```sh
