@@ -1,6 +1,6 @@
-# OBSERVABILITY SYSTEMS
+# FINAL CAPSTONE
 
-This project contains a Flask app that has been containerized and pushed to Dockerhub. The goal is to deploy this app in an AWS EKS clusteR and then collect logs with Fluentd, store them with Prometheus and display them on Grafana dashboards.
+This project contains a Flask app that has been containerized and pushed to Dockerhub. The goal is to deploy this app in an AWS EKS cluster and then collect logs with Fluentd, store them with Prometheus and display them on Grafana dashboards.
 
 ## Architecture
 
@@ -97,7 +97,7 @@ $ terraform destroy --auto-approve
 
 ## URL to public GitHub repo
 
-https://github.com/LaraTunc/wcd-8-observability
+https://github.com/LaraTunc/wcd-final-capstone
 
 ## Dockerhub Image
 
