@@ -48,10 +48,9 @@ Apply the kubernetes deployment and services to your cluster.
 
 ```sh
 $ kubectl apply -f deployment.yaml
-$ kubectl apply -f service.yaml
 ```
 
-Get your load balancer external ip with `kubectl get svc my-app-service -o wide`.
+Get your load balancer external ip with `kubectl get svc my-app-service -o wide`. It might take a while to setup the load balancer. \
 See `Success! Welcome To My App!` on the screen.
 
 ## How to start observability sytems
