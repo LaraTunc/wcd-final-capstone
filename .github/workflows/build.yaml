@@ -48,6 +48,9 @@ jobs:
      
       - name: kubectl current context
         run: kubectl config current-context
+     
+      - name: kubectl get iamidentitymapping
+        run: eksctl get iamidentitymapping --cluster $EKS_CLUSTER_NAME
 
       - name: test kubectl version
         run: kubectl version
