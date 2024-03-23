@@ -126,6 +126,11 @@ Ensure you create the following secrets in your GitHub repository for this to wo
 
 To get your kube config data, please run: `code ~/.kube/config`
 
+We are also going to create a IAm Role to engage with the
+
+- AWS_ACCESS_KEY_ID
+- AWS_SECRET_ACCESS_KEY
+
 ## How to destroy provisioned resources
 
 To destroy provisioned resources, run the following command:
