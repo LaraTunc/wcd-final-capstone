@@ -6,9 +6,6 @@ on:
       - main
   pull_request:
 
-env:
-  AWS_REGION: us-east-1
-
 jobs:
   build:
     runs-on: ubuntu-latest
