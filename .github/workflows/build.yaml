@@ -46,6 +46,9 @@ jobs:
       - name: Show contents of deployment file
         run: cat deployment.yaml
 
+      - name: test kubectl version
+        run: kubectl version
+     
       - name: test kubectl get all
         run: kubectl get all
 
