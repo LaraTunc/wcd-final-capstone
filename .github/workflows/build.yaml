@@ -8,6 +8,7 @@ on:
 
 env:
   AWS_REGION: us-east-1
+  EKS_CLUSTER_NAME: fabulous-badger-1711210691
 
 jobs:
   # build:
@@ -32,10 +33,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Setup EKS
-        uses: aws/amazon-eks-action@v1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          eks-region: us-east-1
-          eks-cluster-name: fabulous-badger-1711210691
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{env.AWS_REGION}}
+
+      - name: Update kube config
+        run: aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_REGION
+
       - name: Deploy to EKS
         run: kubectl apply -f deployment.yaml
