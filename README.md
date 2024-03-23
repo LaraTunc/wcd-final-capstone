@@ -1,6 +1,6 @@
 # FINAL CAPSTONE
 
-This project contains a Flask app that has been containerized and pushed to Dockerhub. The goal is to deploy this app in an AWS EKS cluster and then collect logs with Fluentd, store them with Prometheus and display them on Grafana dashboards.
+Welcome to the Final Capstone project! This repository contains a Flask application that has been containerized and pushed to Dockerhub. The main objective is to deploy this application on an AWS EKS cluster and set up monitoring with Prometheus and Grafana.
 
 ## Architecture
 
@@ -8,91 +8,133 @@ This project contains a Flask app that has been containerized and pushed to Dock
 
 ## Prerequisites
 
-Before proceeding, ensure you have the following prerequisites installed:
+Before you begin, make sure you have the following prerequisites installed on your system:
 
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 - [Kubectl](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-- [Terraform](https://developer.hashicorp.com/terraform/install) (version 0.15.0)
+- [Eksctl](https://eksctl.io/installation/)
+- [Helm](https://helm.sh/docs/intro/install/)
 
-And optionally:
+Additionally, you may need:
 
 - [Pip](https://pip.pypa.io/en/stable/installation/)
-- [Docker hub account](https://hub.docker.com/)
 - [Python](https://docs.python.org/3/using/index.html)
 
-## App
+## Running the Flask App Locally
 
-This is a dockerized app that is available on docker hub. We will use this app to run on our AWS EKS.
-To install the dependencies, please use: `pip3 install -r requirements.txt`
+To run the Flask app locally, follow these steps:
 
-## How to provision resources
-
-The terraform file on the root will provision an EKS cluster with a worker node group of max 2 and min 1 nodes.
+1. Install Dependencies: Install the required dependencies by running:
 
 ```sh
-$ terraform init
-$ terraform plan
-$ terraform apply --auto-approve
+pip3 install -r requirements.txt
 ```
 
-## How to run containerized app on AWS EKS cluster
-
-Add your eks context and confirm that you see you nodes.
+2. Start the Flask App: Run the following command:
 
 ```sh
-$ aws eks update-kubeconfig --region <your-region> --name <your-cluster-name>
-$ kubectl get nodes
+python app.py
 ```
 
-Apply the kubernetes deployment and services to your cluster.
+## Provisioning Resources on AWS EKS
+
+We will use command line with eksctl which uses a CloufFormation template to create the eks cluster with 2 nodes. We will then update the kube config file with the information of the cluster we just created so we can interact with it. This may take up to 15 minutes.
+
+```sh
+$ eksctl create cluster --profile {yourProfile} --name {yourClusterName}
+$ aws eks update-kubeconfig --name {yourClusterName} --region us-east-1 --profile {yourAWSCredentialProfileName}
+```
+
+## Starting the Observability Sytems
+
+We will use a helm chart to create the prometheus monitoring. Please make sure you have helm locally available. The following command installs the chart locally and updates the helm cache.
+
+```sh
+$ helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+$ helm repo update
+```
+
+Create a namespace for monitoring and install the kube prometheus stack. Finally confirm new monitoring resources have been created.
+
+```sh
+$ kubectl create ns monitoring
+$ helm install monitoring prometheus-community/kube-prometheus-stack -n monitoring
+$ kubectl get all -n monitoring
+```
+
+![monitoring](./public/images/monitoring.png)
+
+## Accessing Prometheus and Grafana Dashboards
+
+To see the prometheus dashboard locally forward the pod port to a local port. You can visit the dashboard by going to `127.0.0.1:9090` (`localhost:9090`) on your browser.
+
+```sh
+$ kubectl port-forward service/monitoring-kube-prometheus-prometheus 9090:9090 -n monitoring
+```
+
+![prometheus](./public/images/prometheus.png)
+
+To see the grafana dashboard do the same. You can visit the grafana dashboard on `127.0.0.1:9090` (`localhost:8080`). Visit `Kubernetes/ Compute Resources/ Cluster` on the dashboard to see details.
+
+```sh
+$ kubectl port-forward service/monitoring-grafana 8080:80 -n monitoring
+```
+
+The default credentials for Grafana are:
+
+- User: admin
+- Password: prom-operator
+
+![grafana](./public/images/grafana.png)
+
+## Deploying the Containerized App on AWS EKS Cluster
+
+Please make sure you are on the right kubectl context. Add your eks context and confirm that you see you the kubernetes service.
+
+```sh
+$ kubectl config current-context
+$ kubectl get all
+```
+
+Apply the kubernetes deployment and service to your cluster.
 
 ```sh
 $ kubectl apply -f deployment.yaml
 ```
 
-Get your load balancer external ip with `kubectl get svc my-app-service -o wide`. It might take a while to setup the load balancer. \
+Get your load balancer external ip with `kubectl get svc`. It might take a while to setup the load balancer.
+
+Visit the external ip on your browser or run the following command to see that there is a successful response.
+
+```sh
+$ curl {yourElbExternalIp}
+```
+
 See `Success! Welcome To My App!` on the screen.
 
-## How to start observability sytems
+![app](./public/images/app.png)
 
-Create an RBAC role and role bindings to grant Fluentd access to the necessary Kubernetes resources, such as pods, namespaces, and service accounts
+# Continuous Integration/Continuous Deployment (CI/CD)
 
-```sh
-$ kubectl apply -f fluentd-rbac.yaml
-```
+The repository includes a build.yaml file for CI/CD. It builds a new Docker image on push to the main branch, pushes it to Dockerhub, and restarts the deployment on the cluster.
 
-Create a Kubernetes service account for Fluentd and bind it to the appropriate RBAC role.
+Ensure you create the following secrets in your GitHub repository for this to work:
 
-```sh
-$ kubectl apply -f fluentd-serviceaccount.yaml
-```
+- DOCKERHUB_USERNAME
+- DOCKERHUB_TOKEN
+- KUBE_CONFIG_DATA
 
-Apply the config maps for fluentd, prometheus and grafana to the cluster.
-Fluentd is configured to forward and log everything.
-
-```sh
-$ kubectl create configmap fluentd-config --from-file=fluentd.conf
-$ kubectl create configmap prometheus-config --from-file=prometheus-conf.yml
-$ kubectl create configmap grafana-config --from-file=grafana.ini
-```
-
-Apply the fluentd daemonset, prometheus and grafana service and deployments to the cluster.
-
-```sh
-$ kubectl apply -f fluentd.yaml
-$ kubectl apply -f prometheus-deploy.yaml
-$ kubectl apply -f grafana.yaml
-```
-
-Visit the external cluster ip with the port 3000 to see the grafana dashboard.
-
-`http://<external-ip-of-the-cluster>:3000`
+To get your kube config data, please run: `code ~/.kube/config`
 
 ## How to destroy provisioned resources
 
+To destroy provisioned resources, run the following command:
+
 ```sh
-$ terraform destroy --auto-approve
+$ eksctl delete cluster --name {your-cluster-name}
 ```
+
+Alternatively, you can delete resources directly from the CloudFormation user interface on your AWS account.
 
 ## URL to public GitHub repo
 
@@ -104,11 +146,7 @@ https://hub.docker.com/repository/docker/laratunc/simple_flask_app/general
 
 ## Docs
 
-- https://docs.fluentd.org/
-- https://github.com/fluent/fluentd/tree/master
+- https://prometheus-community.github.io/helm-charts
 - https://prometheus.io/docs/introduction/overview/
-- https://grafana.com/docs/grafana/latest/
-- https://grafana.com/docs/grafana/latest/setup-grafana/installation/kubernetes/
 - https://grafana.com/grafana/dashboards/
-- https://docs.fluentd.org/monitoring-fluentd/monitoring-prometheus
-- https://grafana.com/docs/grafana/latest/datasources/prometheus/
+- Prometheus, Grafana, Eks, Helm lab material
