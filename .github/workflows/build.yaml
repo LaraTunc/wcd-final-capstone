@@ -6,24 +6,23 @@ on:
       - main
   pull_request:
 
+env:
+  AWS_REGION: us-east-1
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Debug 
-        run: | 
-          echo ${{ secrets.DOCKERHUB_USERNAME }}
-          
       - name: Dockerhub Login
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - uses: actions/checkout@v2
       - name: list files
         run: ls -l
       - name: Build image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/simple_flask_app:latest -f Dockerfile .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/simple_flask_app:latest -f ./app/Dockerfile .
       - name: Push image
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/simple_flask_app:latest
   
@@ -40,5 +39,4 @@ jobs:
       - name: Apply Kubernetes manifests
         run: kubectl apply -f deployment.yaml
         env:
-          # encoding your kubeconfig file as base64 and adding it as a secret in GitHub
           KUBECONFIG: ${{ secrets.KUBE_CONFIG_DATA }}
