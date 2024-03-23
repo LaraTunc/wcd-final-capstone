@@ -22,7 +22,7 @@ jobs:
       - name: list files
         run: ls -l
       - name: Build image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/simple_flask_app:latest -f ./app/Dockerfile .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/simple_flask_app:latest -f Dockerfile .
       - name: Push image
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/simple_flask_app:latest
   
