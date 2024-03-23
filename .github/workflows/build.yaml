@@ -7,7 +7,7 @@ on:
   pull_request:
 env:
   AWS_REGION: us-east-1
-  EKS_CLUSTER_NAME: fabulous-badger-1711210691
+  EKS_CLUSTER_NAME: wcd-capstone
 
 jobs:
   build:

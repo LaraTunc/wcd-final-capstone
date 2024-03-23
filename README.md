@@ -41,8 +41,8 @@ python app.py
 We will use command line with eksctl which uses a CloufFormation template to create the eks cluster with 2 nodes. We will then update the kube config file with the information of the cluster we just created so we can interact with it. This may take up to 15 minutes.
 
 ```sh
-$ eksctl create cluster --profile {yourProfile} --name {yourClusterName}
-$ aws eks update-kubeconfig --name {yourClusterName} --region us-east-1 --profile {yourAWSCredentialProfileName}
+$ eksctl create cluster --profile {yourProfile} --name wcd-capstone
+$ aws eks update-kubeconfig --name wcd-capstone --region us-east-1 --profile {yourAWSCredentialProfileName}
 ```
 
 ## Starting the Observability Sytems
@@ -141,8 +141,8 @@ Finally we need to make sure this role is in the aws-auth ConfigMap because if n
 
 ```sh
 $ eksctl create iamidentitymapping \
-    --cluster $CLUSTER-NAME \
-    --region $REGION \
+    --cluster wcd-capstone \
+    --region us-east-1 \
     --arn arn:aws:iam::XXXXXXXXXXXX:user/testuser \
     --group system:masters \
     --no-duplicate-arns \
@@ -156,7 +156,10 @@ $ eksctl create iamidentitymapping \
 To destroy provisioned resources, run the following command:
 
 ```sh
-$ eksctl delete cluster --name {your-cluster-name}
+$ kubectl delete deployments - all
+$ kubectl delete pods — all
+$ kubectl delete services — all
+$ eksctl delete cluster --name wcd-capstone
 ```
 
 Alternatively, you can delete resources directly from the CloudFormation user interface on your AWS account.
