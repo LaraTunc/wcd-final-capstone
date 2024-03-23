@@ -45,6 +45,9 @@ jobs:
 
       - name: Show contents of deployment file
         run: cat deployment.yaml
+     
+      - name: kubectl current context
+        run: kubectl config current-context
 
       - name: test kubectl version
         run: kubectl version
