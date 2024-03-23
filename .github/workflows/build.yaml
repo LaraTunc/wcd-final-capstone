@@ -46,5 +46,8 @@ jobs:
       - name: Show contents of deployment file
         run: cat deployment.yaml
 
+      - name: test kubectl get all
+        run: kubectl get all
+
       - name: Deploy to EKS
-        run: kubectl apply -f ./deployment.yaml
+        run: kubectl apply -f deployment.yaml
