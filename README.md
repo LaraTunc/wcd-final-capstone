@@ -126,10 +126,30 @@ Ensure you create the following secrets in your GitHub repository for this to wo
 
 To get your kube config data, please run: `code ~/.kube/config`
 
-We are also going to create a IAm Role to engage with the
+We are also going to create a IAm Role to engage with the eks cluster and create new deployments on push to main. For the go the the IAm dashboard on your AWS account and click on "Create new user". Choose a user name attach policies directly to it and choose Admin Role (this is not recommended on a production environment).
+
+Once the role is created create an access key for it.
+
+![iamrole](./public/images/iamrole.png)
+
+Copy the key and the id to your Github secrets as well as follows:
 
 - AWS_ACCESS_KEY_ID
 - AWS_SECRET_ACCESS_KEY
+
+Finally we need to make sure this role is in the aws-auth ConfigMap because if not we won't have the proper rights.
+
+```sh
+$ eksctl create iamidentitymapping \
+    --cluster $CLUSTER-NAME \
+    --region $REGION \
+    --arn arn:aws:iam::XXXXXXXXXXXX:user/testuser \
+    --group system:masters \
+    --no-duplicate-arns \
+    --username admin-user1
+```
+
+![secrets](./public/images/secrets.png)
 
 ## How to destroy provisioned resources
 
@@ -154,4 +174,5 @@ https://hub.docker.com/repository/docker/laratunc/simple_flask_app/general
 - https://prometheus-community.github.io/helm-charts
 - https://prometheus.io/docs/introduction/overview/
 - https://grafana.com/grafana/dashboards/
+- https://repost.aws/knowledge-center/eks-api-server-unauthorized-error#You.27re_not_the_cluster_creator
 - Prometheus, Grafana, Eks, Helm lab material
