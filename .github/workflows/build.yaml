@@ -50,7 +50,7 @@ jobs:
         run: kubectl config current-context
      
       - name: kubectl get iamidentitymapping
-        run: eksctl get iamidentitymapping --cluster $EKS_CLUSTER_NAME
+        run: kubectl describe configmap aws-auth -n kube-system
 
       - name: test kubectl version
         run: kubectl version
