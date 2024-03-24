@@ -22,9 +22,9 @@ jobs:
       - name: list files
         run: ls -l
       - name: Build image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/simple_flask_app:latest -f Dockerfile .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/final-capstone:latest -f Dockerfile .
       - name: Push image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/simple_flask_app:latest
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/final-capstone:latest
   
   deploy:
     runs-on: ubuntu-latest

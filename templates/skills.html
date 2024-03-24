@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skills</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/skills.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/skills">Skills</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section>
+        <div class="container">
+            <h1>Skills</h2>
+                <div class="skills">
+                    <img src="{{ url_for('static', filename='images/js.png') }}" alt="js" height="100" width="100"
+                        style="object-fit: contain;">
+                    <img src="{{ url_for('static', filename='images/ts.png') }}" alt="ts" height="100" width="100"
+                        style="object-fit: contain;">
+                    <img src="{{ url_for('static', filename='images/aws.png') }}" alt="aws" height="100" width="100"
+                        style="object-fit: contain;">
+                    <img src="{{ url_for('static', filename='images/docker.png') }}" alt="docker" height="100"
+                        width="100" style="object-fit: contain;">
+                    <img src="{{ url_for('static', filename='images/graphql.png') }}" alt="graphql" height="100"
+                        width="100" style="object-fit: contain;">
+                    <img src="{{ url_for('static', filename='images/jenkins.png') }}" alt="jenkins" height="100"
+                        width="100" style="object-fit: contain;">
+                    <img src="{{ url_for('static', filename='images/spark.png') }}" alt="spark" height="100" width="100"
+                        style="object-fit: contain;">
+                </div>
+                <div class="skills">
+                    <img src="{{ url_for('static', filename='images/k8s.png') }}" alt="kubernetes" height="100"
+                        width="100" style="object-fit: contain;">
+                    <img src="{{ url_for('static', filename='images/mongo.png') }}" alt="mongodb" height="100"
+                        width="100" style="object-fit: contain;">
+                    <img src="{{ url_for('static', filename='images/nest.png') }}" alt="nestjs" height="100" width="100"
+                        style="object-fit: contain;">
+                    <img src="{{ url_for('static', filename='images/node.png') }}" alt="nodejs" height="100" width="100"
+                        style="object-fit: contain;">
+                    <img src="{{ url_for('static', filename='images/python.png') }}" alt="python" height="100"
+                        width="100" style="object-fit: contain;">
+                    <img src="{{ url_for('static', filename='images/terraform.png') }}" alt="terraform" height="100"
+                        width="100" style="object-fit: contain;">
+                    <img src="{{ url_for('static', filename='images/redux.png') }}" alt="redux" height="100" width="100"
+                        style="object-fit: contain;">
+                </div>
+        </div>
+        </div>
+    </section>
+
+</body>
+
+</html>

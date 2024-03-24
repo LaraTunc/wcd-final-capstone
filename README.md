@@ -33,7 +33,7 @@ pip3 install -r requirements.txt
 2. Start the Flask App: Run the following command:
 
 ```sh
-python app.py
+python3 app.py
 ```
 
 ## Provisioning Resources on AWS EKS
@@ -110,11 +110,11 @@ Visit the external ip on your browser or run the following command to see that t
 $ curl {yourElbExternalIp}
 ```
 
-See `Success! Welcome To My App!` on the screen.
+See `Final Capstone` on the screen.
 
 ![app](./public/images/app.png)
 
-# Continuous Integration/Continuous Deployment (CI/CD)
+# Continuous Integration/Continuous Deployment (CI/CD) - Github Actions
 
 The repository includes a build.yaml file for CI/CD. It builds a new Docker image on push to the main branch, pushes it to Dockerhub, and restarts the deployment on the cluster.
 
@@ -124,20 +124,18 @@ Ensure you create the following secrets in your GitHub repository for this to wo
 - DOCKERHUB_TOKEN
 - KUBE_CONFIG_DATA
 
-To get your kube config data, please run: `code ~/.kube/config`
+Retrieve your kube config data by executing: `code ~/.kube/config`
 
-We are also going to create a IAm Role to engage with the eks cluster and create new deployments on push to main. For the go the the IAm dashboard on your AWS account and click on "Create new user". Choose a user name attach policies directly to it and choose Admin Role (this is not recommended on a production environment).
-
-Once the role is created create an access key for it.
+Additionally, we will set up an IAM Role to interface with the EKS cluster and facilitate new deployments triggered by pushes to the main branch. Navigate to the IAM dashboard in your AWS account and select "Create new user." Choose a username, directly attach policies (not recommended in a production environment), and proceed to generate an access key for this user.
 
 ![iamrole](./public/images/iamrole.png)
 
-Copy the key and the id to your Github secrets as well as follows:
+Once the role is established, copy both the key and ID to your GitHub secrets under the following labels:
 
 - AWS_ACCESS_KEY_ID
 - AWS_SECRET_ACCESS_KEY
 
-Finally we need to make sure this role is in the aws-auth ConfigMap because if not we won't have the proper rights.
+Finally, ensure this role is included in the aws-auth ConfigMap to grant the necessary permissions:
 
 ```sh
 $ eksctl create iamidentitymapping \
@@ -156,9 +154,10 @@ $ eksctl create iamidentitymapping \
 To destroy provisioned resources, run the following command:
 
 ```sh
-$ kubectl delete deployments - all
-$ kubectl delete pods — all
-$ kubectl delete services — all
+$ kubectl delete deployments --all
+$ kubectl delete pods —-all
+$ kubectl delete services —-all
+$ kubectl delete ns monitoring
 $ eksctl delete cluster --name wcd-capstone
 ```
 
@@ -170,7 +169,7 @@ https://github.com/LaraTunc/wcd-final-capstone
 
 ## Dockerhub Image
 
-https://hub.docker.com/repository/docker/laratunc/simple_flask_app/general
+https://hub.docker.com/r/laratunc/final-capstone
 
 ## Docs
 
@@ -178,4 +177,6 @@ https://hub.docker.com/repository/docker/laratunc/simple_flask_app/general
 - https://prometheus.io/docs/introduction/overview/
 - https://grafana.com/grafana/dashboards/
 - https://repost.aws/knowledge-center/eks-api-server-unauthorized-error#You.27re_not_the_cluster_creator
+- https://dlmade.medium.com/ci-cd-with-github-action-and-aws-eks-5fd9714010cd
+- https://docs.docker.com/build/building/multi-platform/
 - Prometheus, Grafana, Eks, Helm lab material

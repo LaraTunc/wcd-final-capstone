@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: my-app
-        image: laratunc/simple_flask_app
+        image: laratunc/final-capstone
         ports:
         - containerPort: 80
 ---
