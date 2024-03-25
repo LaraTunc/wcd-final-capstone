@@ -12,7 +12,7 @@ Before you begin, make sure you have the following prerequisites installed on yo
 
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 - [Kubectl](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-- [Eksctl](https://eksctl.io/installation/)
+- [Terraform](https://developer.hashicorp.com/terraform/install)
 - [Helm](https://helm.sh/docs/intro/install/)
 
 Additionally, you may need:
