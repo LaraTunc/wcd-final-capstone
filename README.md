@@ -45,6 +45,8 @@ $ eksctl create cluster --profile {yourProfile} --name wcd-capstone
 $ aws eks update-kubeconfig --name wcd-capstone --region us-east-1 --profile {yourAWSCredentialProfileName}
 ```
 
+Retrieve your kube config data by executing: `code ~/.kube/config`
+
 ## Starting the Observability Sytems
 
 We will use a helm chart to create the prometheus monitoring. Please make sure you have helm locally available. The following command installs the chart locally and updates the helm cache.
@@ -122,9 +124,6 @@ Ensure you create the following secrets in your GitHub repository for this to wo
 
 - DOCKERHUB_USERNAME
 - DOCKERHUB_TOKEN
-- KUBE_CONFIG_DATA
-
-Retrieve your kube config data by executing: `code ~/.kube/config`
 
 Additionally, we will set up an IAM Role to interface with the EKS cluster and facilitate new deployments triggered by pushes to the main branch. Navigate to the IAM dashboard in your AWS account and select "Create new user." Choose a username, directly attach policies (not recommended in a production environment), and proceed to generate an access key for this user.
 
