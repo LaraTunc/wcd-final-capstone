@@ -38,14 +38,16 @@ python3 app.py
 
 ## Provisioning Resources on AWS EKS
 
-We will use command line with eksctl which uses a CloufFormation template to create the eks cluster with 2 nodes. We will then update the kube config file with the information of the cluster we just created so we can interact with it. This may take up to 15 minutes.
+We will use terraform to create the eks cluster with 2 nodes. We will then update the kube config file with the information of the cluster we just created so we can interact with it. This may take up to 15 minutes.
 
 ```sh
-$ eksctl create cluster --profile {yourProfile} --name wcd-capstone
+$ terraform init
+$ terraform plan
+$ terraform apply --auto-approve
 $ aws eks update-kubeconfig --name wcd-capstone --region us-east-1 --profile {yourAWSCredentialProfileName}
 ```
 
-Retrieve your kube config data by executing: `code ~/.kube/config`
+To see the changes on your kube config data: `code ~/.kube/config`
 
 ## Starting the Observability Sytems
 
@@ -157,7 +159,7 @@ $ kubectl delete deployments --all
 $ kubectl delete pods —-all
 $ kubectl delete services —-all
 $ kubectl delete ns monitoring
-$ eksctl delete cluster --name wcd-capstone
+$ terraform destroy --auto-approve
 ```
 
 Alternatively, you can delete resources directly from the CloudFormation user interface on your AWS account.
