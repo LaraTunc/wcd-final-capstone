@@ -156,8 +156,8 @@ To destroy provisioned resources, run the following command:
 
 ```sh
 $ kubectl delete deployments --all
-$ kubectl delete pods —-all
-$ kubectl delete services —-all
+$ kubectl delete pods --all
+$ kubectl delete services --all
 $ kubectl delete ns monitoring
 $ terraform destroy --auto-approve
 ```
